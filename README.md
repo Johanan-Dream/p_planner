@@ -39,6 +39,50 @@
 | Google API | 관광지 정보, 실제 도보 경로와 예상 이동 시간 |
 | OpenAI API | 자연어로 입력한 여행 조건 해석과 일정 재생성 |
 
+## 🌸 오사카를 함께 만든 팀 14
+
+가고 싶은 곳을 모아 하나의 여행으로, 다섯 명의 아이디어를 모아 P Plan으로!
+
+<table>
+  <tr>
+    <td align="center" width="150">
+      <a href="https://github.com/Johanan-Dream">
+        <img src="https://avatars.githubusercontent.com/u/117050032?v=4&amp;s=160" width="80" height="80" alt="Johanan-Dream 프로필 사진" /><br />
+        <sub><b>Johanan-Dream</b></sub>
+      </a><br />
+      🌷
+    </td>
+    <td align="center" width="150">
+      <a href="https://github.com/munggae-dev">
+        <img src="https://avatars.githubusercontent.com/u/107828911?v=4&amp;s=160" width="80" height="80" alt="munggae-dev 프로필 사진" /><br />
+        <sub><b>munggae-dev</b></sub>
+      </a><br />
+      🌱
+    </td>
+    <td align="center" width="150">
+      <a href="https://github.com/lamp925">
+        <img src="https://avatars.githubusercontent.com/u/173696154?v=4&amp;s=160" width="80" height="80" alt="lamp925 프로필 사진" /><br />
+        <sub><b>lamp925</b></sub>
+      </a><br />
+      🌼
+    </td>
+    <td align="center" width="150">
+      <a href="https://github.com/dkfhd655-jpg">
+        <img src="https://avatars.githubusercontent.com/u/335981887?v=4&amp;s=160" width="80" height="80" alt="dkfhd655-jpg 프로필 사진" /><br />
+        <sub><b>dkfhd655-jpg</b></sub>
+      </a><br />
+      🍀
+    </td>
+    <td align="center" width="150">
+      <a href="https://github.com/1218yonghee-stack">
+        <img src="https://avatars.githubusercontent.com/u/356849122?v=4&amp;s=160" width="80" height="80" alt="1218yonghee-stack 프로필 사진" /><br />
+        <sub><b>1218yonghee-stack</b></sub>
+      </a><br />
+      🌸
+    </td>
+  </tr>
+</table>
+
 ## 로컬 개발 시작하기
 
 메이커톤 이후에는 팀 저장소를 각자 GitHub 계정으로 포크해 원하는 기능을 추가하거나 개선할 수 있습니다.
