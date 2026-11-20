@@ -46,39 +46,39 @@
 <table>
   <tr>
     <td align="center" width="150">
-      <a href="https://github.com/Johanan-Dream">
-        <img src="https://avatars.githubusercontent.com/u/117050032?v=4&amp;s=160" width="80" height="80" alt="Johanan-Dream 프로필 사진" /><br />
-        <sub><b>Johanan-Dream</b></sub>
-      </a><br />
-      🌷
-    </td>
-    <td align="center" width="150">
       <a href="https://github.com/munggae-dev">
         <img src="https://avatars.githubusercontent.com/u/107828911?v=4&amp;s=160" width="80" height="80" alt="munggae-dev 프로필 사진" /><br />
         <sub><b>munggae-dev</b></sub>
       </a><br />
-      🌱
+      팀장
+    </td>
+    <td align="center" width="150">
+      <a href="https://github.com/Johanan-Dream">
+        <img src="https://avatars.githubusercontent.com/u/117050032?v=4&amp;s=160" width="80" height="80" alt="Johanan-Dream 프로필 사진" /><br />
+        <sub><b>Johanan-Dream</b></sub>
+      </a><br />
+      팀원
     </td>
     <td align="center" width="150">
       <a href="https://github.com/lamp925">
         <img src="https://avatars.githubusercontent.com/u/173696154?v=4&amp;s=160" width="80" height="80" alt="lamp925 프로필 사진" /><br />
         <sub><b>lamp925</b></sub>
       </a><br />
-      🌼
+      팀원
     </td>
     <td align="center" width="150">
       <a href="https://github.com/dkfhd655-jpg">
         <img src="https://avatars.githubusercontent.com/u/335981887?v=4&amp;s=160" width="80" height="80" alt="dkfhd655-jpg 프로필 사진" /><br />
         <sub><b>dkfhd655-jpg</b></sub>
       </a><br />
-      🍀
+      팀원
     </td>
     <td align="center" width="150">
       <a href="https://github.com/1218yonghee-stack">
         <img src="https://avatars.githubusercontent.com/u/356849122?v=4&amp;s=160" width="80" height="80" alt="1218yonghee-stack 프로필 사진" /><br />
         <sub><b>1218yonghee-stack</b></sub>
       </a><br />
-      🌸
+      팀원
     </td>
   </tr>
 </table>
