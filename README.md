@@ -4,7 +4,7 @@
 
 [서비스 바로가기](https://p-plan.replit.app/)
 
-<!-- 발표 자료를 docs/Osaka_Planner_Team14_Updated.pptx에 올린 뒤 여기에 링크를 추가하세요. -->
+[발표 자료 다운로드 (PPTX)](docs/Osaka_Planner_Team14_Updated.pptx?raw=true)
 
 위 링크에서 메이커톤에서 만든 버전을 체험할 수 있습니다.
 
@@ -23,7 +23,7 @@
 
 일정 생성부터 지도 경로 확인, 방문 순서와 체류 시간 수정까지 볼 수 있습니다.
 
-<!-- pplan-demo-60s.mp4를 첨부한 뒤 GitHub가 생성한 영상 주소를 여기에 넣으세요. -->
+[▶ 60초 시연 영상 보기](https://github.com/Johanan-Dream/p_planner/blob/main/docs/pplan-demo-60s.mp4) · [MP4 다운로드](docs/pplan-demo-60s.mp4?raw=true)
 
 ## 사용 방법
 
