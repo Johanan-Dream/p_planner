@@ -264,6 +264,6 @@ export interface HealthStatus {
 }
 
 export type GetTravelMapParams = {
-ids: string;
+  ids: string;
 };
 

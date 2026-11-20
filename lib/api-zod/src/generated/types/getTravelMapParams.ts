@@ -7,5 +7,5 @@
  */
 
 export type GetTravelMapParams = {
-ids: string;
+  ids: string;
 };
