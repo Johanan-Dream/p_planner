@@ -11,6 +11,121 @@ tags:
   - name: health
     description: Health operations
 paths:
+  /travel/official:
+    post:
+      operationId: checkTravelOfficial
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/TravelOfficialRequest" }
+      responses:
+        "200":
+          description: Explicit web search result with independently checked official evidence
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/TravelOfficialResult" }
+        "400":
+          description: Unsupported place or invalid dates
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/TravelError" }
+        "429":
+          description: Search limit exceeded
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/TravelError" }
+        "503":
+          description: Search unavailable; existing planning stays usable
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/TravelError" }
+  /travel/catalog:
+    get:
+      operationId: getTravelCatalog
+      responses:
+        "200":
+          description: Verified Google place information and explicit service status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TravelCatalog"
+  /travel/plan:
+    post:
+      operationId: buildTravelPlan
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TravelInput"
+      responses:
+        "200":
+          description: A draft with explicit conflicts and live route results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TravelPlan"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TravelError"
+  /travel/requests:
+    post:
+      operationId: interpretTravelRequest
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TravelRequest"
+      responses:
+        "200":
+          description: AI extracted preferences, never unverified travel facts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TravelRequestResult"
+        "503":
+          description: AI unavailable, manual inputs remain usable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TravelError"
+  /travel/map:
+    get:
+      operationId: getTravelMap
+      parameters:
+        - in: query
+          name: ids
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Server-proxied Google Static Map, no key in browser
+          content:
+            image/png:
+              schema: { type: string, format: binary }
+        "503":
+          description: Map unavailable
+  /travel/photo/{id}:
+    get:
+      operationId: getTravelPhoto
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Google place photo, attribution supplied in catalog
+          content:
+            image/jpeg:
+              schema: { type: string, format: binary }
+        "404":
+          description: No verified photo
   /healthz:
     get:
       operationId: healthCheck
@@ -26,6 +141,228 @@ paths:
                 $ref: "#/components/schemas/HealthStatus"
 components:
   schemas:
+    TravelOfficialRequest:
+      type: object
+      required: [placeId, dates]
+      properties:
+        placeId: { type: string, enum: [osaka-castle, kaiyukan] }
+        dates: { type: array, minItems: 1, maxItems: 31, items: { type: string } }
+    TravelOfficialFact:
+      type: object
+      required: [field, status, text, scope, appliesToDates]
+      properties:
+        field:
+          type: string
+          enum: [openingHours, regularClosed, temporaryClosed, lastAdmission, reservation, reservationOpen, reservationDeadline]
+        status: { type: string, enum: [verified, unknown, conflict] }
+        text: { type: string }
+        scope: { type: string }
+        sourceUrl: { type: string }
+        quote: { type: string }
+        appliesToDates: { type: array, items: { type: string } }
+        openTime: { type: string }
+        closeTime: { type: string }
+        time: { type: string }
+        deadlineDate: { type: string }
+        closedDates: { type: array, items: { type: string } }
+        reservationStatus: { type: string, enum: [required, recommended, optional, unnecessary, unknown] }
+    TravelOfficialSource:
+      type: object
+      required: [url, title, verified, checkedAt]
+      properties:
+        url: { type: string }
+        title: { type: string }
+        verified: { type: boolean }
+        checkedAt: { type: string }
+    TravelOfficialResult:
+      type: object
+      required: [placeId, status, checkedAt, requestedDates, facts, sources, warnings, cached, webSearchUsed, model]
+      properties:
+        placeId: { type: string }
+        status: { type: string, enum: [verified, partial, unknown] }
+        checkedAt: { type: string }
+        requestedDates: { type: array, items: { type: string } }
+        facts: { type: array, items: { $ref: "#/components/schemas/TravelOfficialFact" } }
+        sources: { type: array, items: { $ref: "#/components/schemas/TravelOfficialSource" } }
+        warnings: { type: array, items: { type: string } }
+        cached: { type: boolean }
+        webSearchUsed: { type: boolean }
+        model: { type: string }
+        officialUrl: { type: string }
+        bookingUrl: { type: string }
+    TravelError:
+      type: object
+      required: [error]
+      properties:
+        error: { type: string }
+    TravelPreference:
+      type: object
+      properties:
+        date: { type: string }
+        time: { type: string }
+        stayMinutes: { type: number }
+        order: { type: number }
+    TravelInput:
+      type: object
+      required: [startDate, endDate, spontaneity, selectedIds, requiredIds]
+      properties:
+        startDate: { type: string }
+        endDate: { type: string }
+        spontaneity: { type: number, minimum: 0, maximum: 100 }
+        selectedIds: { type: array, items: { type: string } }
+        requiredIds: { type: array, items: { type: string } }
+        activityStart: { type: string }
+        activityEnd: { type: string }
+        preferences:
+          type: object
+          additionalProperties:
+            $ref: "#/components/schemas/TravelPreference"
+    TravelService:
+      type: object
+      required: [name, status, message]
+      properties:
+        name: { type: string }
+        status: { type: string }
+        message: { type: string }
+    TravelPeriodPoint:
+      type: object
+      properties:
+        day: { type: integer }
+        hour: { type: integer }
+        minute: { type: integer }
+        date:
+          type: object
+          properties:
+            year: { type: integer }
+            month: { type: integer }
+            day: { type: integer }
+    TravelHours:
+      type: object
+      properties:
+        weekdayDescriptions: { type: array, items: { type: string } }
+        periods:
+          type: array
+          items:
+            type: object
+            properties:
+              open: { $ref: "#/components/schemas/TravelPeriodPoint" }
+              close: { $ref: "#/components/schemas/TravelPeriodPoint" }
+    TravelPlace:
+      type: object
+      required: [id, name, area, category, description]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        area: { type: string }
+        category: { type: string }
+        description: { type: string }
+        googleId: { type: string }
+        lat: { type: number }
+        lng: { type: number }
+        address: { type: string }
+        mapsUrl: { type: string }
+        rating: { type: number }
+        photoUrl: { type: string }
+        photoAuthors: { type: array, items: { type: string } }
+        openingHours: { $ref: "#/components/schemas/TravelHours" }
+        currentHours: { $ref: "#/components/schemas/TravelHours" }
+        checkedAt: { type: string }
+        businessStatus: { type: string }
+        error: { type: string }
+        websiteUrl: { type: string }
+        officialUrl: { type: string }
+        official: { $ref: "#/components/schemas/TravelOfficialResult" }
+    TravelCatalog:
+      type: object
+      required: [places, services, checkedAt]
+      properties:
+        places:
+          type: array
+          items: { $ref: "#/components/schemas/TravelPlace" }
+        services:
+          type: array
+          items: { $ref: "#/components/schemas/TravelService" }
+        checkedAt: { type: string }
+    TravelLeg:
+      type: object
+      required: [fromId, toId, status]
+      properties:
+        fromId: { type: string }
+        toId: { type: string }
+        status: { type: string }
+        distanceMeters: { type: number }
+        durationSeconds: { type: number }
+        polyline: { type: string }
+        error: { type: string }
+    TravelVisit:
+      type: object
+      required: [place, required, startTime, endTime, stayMinutes, warnings]
+      properties:
+        place: { $ref: "#/components/schemas/TravelPlace" }
+        required: { type: boolean }
+        startTime: { type: string }
+        endTime: { type: string }
+        stayMinutes: { type: number }
+        warnings: { type: array, items: { type: string } }
+    TravelDay:
+      type: object
+      required: [date, title, visits, legs, freeMinutes, targetFreeMinutes, warnings]
+      properties:
+        date: { type: string }
+        title: { type: string }
+        visits:
+          type: array
+          items: { $ref: "#/components/schemas/TravelVisit" }
+        legs:
+          type: array
+          items: { $ref: "#/components/schemas/TravelLeg" }
+        freeMinutes: { type: [number, "null"] }
+        targetFreeMinutes: { type: number }
+        warnings: { type: array, items: { type: string } }
+        map:
+          type: object
+          required: [imageUrl, lat, lng, zoom]
+          properties:
+            imageUrl: { type: string }
+            lat: { type: number }
+            lng: { type: number }
+            zoom: { type: number }
+    TravelPlan:
+      type: object
+      required: [days, unscheduled, warnings, mode, freePercent, services, generatedAt]
+      properties:
+        days:
+          type: array
+          items: { $ref: "#/components/schemas/TravelDay" }
+        unscheduled:
+          type: array
+          items:
+            type: object
+            required: [place, required, reason]
+            properties:
+              place: { $ref: "#/components/schemas/TravelPlace" }
+              required: { type: boolean }
+              reason: { type: string }
+        warnings: { type: array, items: { type: string } }
+        mode: { type: string }
+        freePercent: { type: [number, "null"] }
+        services:
+          type: array
+          items: { $ref: "#/components/schemas/TravelService" }
+        generatedAt: { type: string }
+    TravelRequest:
+      type: object
+      required: [text, input]
+      properties:
+        text: { type: string, minLength: 1, maxLength: 1000 }
+        input: { $ref: "#/components/schemas/TravelInput" }
+    TravelRequestResult:
+      type: object
+      required: [input, aiUsed, message]
+      properties:
+        input: { $ref: "#/components/schemas/TravelInput" }
+        aiUsed: { type: boolean }
+        message: { type: string }
     HealthStatus:
       type: object
       properties:
